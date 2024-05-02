@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="1" passed="1" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2024-05-02T12:11:18 EEST" name="Default suite" finished-at="2024-05-02T12:13:31 EEST" duration-ms="132994">
+    <groups>
+    </groups>
+    <test started-at="2024-05-02T12:11:18 EEST" name="Default test" finished-at="2024-05-02T12:13:31 EEST" duration-ms="132994">
+      <class name="doaa.project.LoginTest">
+        <test-method is-config="true" signature="setupClass()[pri:0, instance:doaa.project.LoginTest@815b41f]" started-at="2024-05-02T12:11:18 EEST" name="setupClass" finished-at="2024-05-02T12:11:24 EEST" duration-ms="6028" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setupClass -->
+        <test-method signature="testLoginAndSearch()[pri:0, instance:doaa.project.LoginTest@815b41f]" started-at="2024-05-02T12:11:24 EEST" name="testLoginAndSearch" finished-at="2024-05-02T12:13:30 EEST" duration-ms="126298" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testLoginAndSearch -->
+        <test-method is-config="true" signature="tearDown()[pri:0, instance:doaa.project.LoginTest@815b41f]" started-at="2024-05-02T12:13:30 EEST" name="tearDown" finished-at="2024-05-02T12:13:31 EEST" duration-ms="604" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+      </class> <!-- doaa.project.LoginTest -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>
