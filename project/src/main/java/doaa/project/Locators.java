@@ -9,7 +9,7 @@ public interface Locators {
     By icon = By.xpath("//li-icon[@aria-label='LinkedIn']//*[name()='svg']");
     By searchBar = By.xpath("//input[@placeholder='Search']");
     By fil = By.xpath("//button[@role='link'][normalize-space()='People']"); 
-    By firstElem = By.xpath("//div[@id='search']//h3/parent::a"); 
+    By firstElem = By.cssSelector("h3"); 
     String xpath = "//button[contains(@class, 'search-reusables__filter-pill-button') and normalize-space()='%s']";
     By searchBox= By.name("q");
     By position = By.cssSelector(".entity-result__primary-subtitle.t-14.t-black.t-normal");

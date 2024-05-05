@@ -8,45 +8,46 @@ import java.util.List;
 
 public class CSVUtility {
 
-    public static String[] readFirstRowData(String filePath) throws IOException {
+	public static String[] readFirstRowData(String filePath) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line = reader.readLine();  // Read the first line of the CSV
+            String line = reader.readLine();
             if (line != null) {
-                // Strip outer quotes and split by comma
-                String[] data = line.replace("\"", "").split(",");
-                return data; // Return the array of data, with quotes removed
+                return line.replace("\"", "").split(",");
             }
         } catch (IOException e) {
             System.err.println("Error reading from CSV file: " + e.getMessage());
             throw e;
         }
-        return new String[0]; // Return empty array if no data or error
+        return new String[0];
     }
     
-    
+    // Writing LinkedIn data to CSV
     public static void writeToCSV(List<String[]> data) throws IOException {
-        FileWriter csvWriter = null;
-        try {
-            // Open the file in append mode
-            csvWriter = new FileWriter(Config.CSV_FILE_PATH, true);
+        try (FileWriter csvWriter = new FileWriter(Config.CSV_FILE_PATH, true)) {
             for (String[] record : data) {
                 String csvLine = String.join(",", record);
-                csvWriter.append("\n");
-                csvWriter.append(csvLine);
+                csvWriter.append(csvLine + "\n");
             }
-            csvWriter.flush();
         } catch (IOException e) {
             System.err.println("Error writing to CSV file: " + e.getMessage());
             throw e;
-        } finally {
-            if (csvWriter != null) {
-                try {
-                    csvWriter.close();
-                } catch (IOException e) {
-                    System.err.println("Error closing CSV writer: " + e.getMessage());
-                }
-            }
         }
     }
-
+    
+    // Writing Google hrefs to CSV starting two rows below the last entry of LinkedIn data
+    public static void appendGoogleHrefsToCSV(List<String> googleHrefs) throws IOException {
+        try (FileWriter csvWriter = new FileWriter(Config.CSV_FILE_PATH, true)) {
+            // Append two blank lines first
+            csvWriter.append("\n\n");
+            for (String href : googleHrefs) {
+                csvWriter.append("Google URL: " + href + "\n");
+            }
+        } catch (IOException e) {
+            System.err.println("Error writing to CSV file: " + e.getMessage());
+            throw e;
+        }
+    }
 }
+
+    
+

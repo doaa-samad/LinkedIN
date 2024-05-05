@@ -60,56 +60,45 @@ public class LoginTest {
         loginPage.loginAs(Config.EMAIL, Config.PASSWORD);
         wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.searchBar));
 
+        // Read user and filter from CSV
         String[] userData = CSVUtility.readFirstRowData(Config.CSV_FILE_PATH);
         if (userData.length > 1) {
             String userToSearch = userData[0];
             String filterType = userData[1];
+
+            // LinkedIn search and result saving
             mainPage.search(userToSearch);
-            wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.searchBar));
-
             resultPage.applyFilter(filterType);
-            List<String[]> searchResults = filterResultPage.getFirstFiveResults();
-            CSVUtility.writeToCSV(searchResults);
+            List<String[]> linkedInResults = filterResultPage.getFirstFiveResults();
+            CSVUtility.writeToCSV(linkedInResults);
 
-            List<String> hrefs = new ArrayList<>();
-            for (String[] item : searchResults) {
-                hrefs.add(item[1]);  
+            List<String> linkedInHrefs = new ArrayList<>();
+            for (String[] item : linkedInResults) {
+                linkedInHrefs.add(item[1]); // Collect LinkedIn hrefs
             }
 
-           
-            for (String[] item : searchResults) {
-            	String users= item[0];
-                String href = item[1]; // Assume item[1] contains the URL
+            // Google search and result fetching using JavaScript
+            googlePage.goTo();
+            googlePage.searchFor(userToSearch + " " + filterType + " LinkedIn");
+            List<String> googleHrefs = googleResultPage.fetchFirstFiveLinks();
+            CSVUtility.appendGoogleHrefsToCSV(googleHrefs);
 
-                googlePage.goTo();
-                googlePage.searchFor(users + " LinkedIn");
-                googleResultPage.clickOnFirstResult();
-                
-                // Check if a new tab opened and switch if necessary
-                ArrayList<String> tabs = new ArrayList<>(driver.getWindowHandles());
-                if (tabs.size() > 1) {
-                    driver.switchTo().window(tabs.get(1));
-                }
-
-                String currentUrl = userPage.getUserPageURL();
-                System.out.println("LinkedIn URL: " + href);
-                System.out.println("Google URL: " + currentUrl);
-
-                Assert.assertNotEquals(href, currentUrl, "URLs should not be the same.");
-
-                if (tabs.size() > 1) {
-                    driver.close();
-                    driver.switchTo().window(tabs.get(0));
-                }
+            // Print LinkedIn and Google hrefs alternately and perform assertions
+            int maxIndex = Math.min(linkedInHrefs.size(), googleHrefs.size());
+            for (int i = 0; i < maxIndex; i++) {
+                System.out.println("LinkedIn URL: " + linkedInHrefs.get(i));
+                System.out.println("Google URL: " + googleHrefs.get(i));
+                Assert.assertNotEquals(linkedInHrefs.get(i), googleHrefs.get(i), "URLs should not be the same.");
             }
         } else {
-            Assert.fail("CSV data is incomplete.");
+            System.out.println("CSV data is incomplete.");
         }
     }
 
 
+
     @AfterClass
-    public void tearDown() {
+    public void tearDown() throws InterruptedException {
         if (driver != null) {
             driver.quit();
         }

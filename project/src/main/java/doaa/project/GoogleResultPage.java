@@ -1,12 +1,12 @@
 package doaa.project;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
+import java.util.List;
+import java.util.ArrayList;
 
 public class GoogleResultPage {
     private WebDriver driver;
@@ -14,16 +14,25 @@ public class GoogleResultPage {
 
     public GoogleResultPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(20)); 
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
-    public void clickOnFirstResult() {
-        try {
-            WebElement result = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='rso']//div[@class='g']//a/h3")));
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", result);
-            result.click();
-        } catch (Exception e) {
-            System.out.println("Error clicking on the first result: " + e.getMessage());
+    // Fetch and print the first five non-null <a> tag hrefs from Google search results
+    public List<String> fetchFirstFiveLinks() {
+        List<WebElement> allLinks = driver.findElements(By.tagName("a"));
+        List<String> validHrefs = new ArrayList<>();
+        
+        // Collect the first five non-null hrefs
+        for (WebElement link : allLinks) {
+            String href = link.getAttribute("href");
+            if (href != null && !href.isEmpty()) {
+                validHrefs.add(href);
+//                System.out.println("URL: " + href); // Print non-null href
+                if (validHrefs.size() == 5) {
+                    break; // Stop after collecting five valid hrefs
+                }
+            }
         }
+        return validHrefs;
     }
 }
